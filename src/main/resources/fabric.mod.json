@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "vlo",
+  "version": "${version}",
+  "name": "Vlo: Школа Выживания",
+  "description": "Сюрреалистичная школа V LO (Białystok). Черный юмор, СНГ-мемы, директор-маньяк (но честный) и Адрик.",
+  "authors": ["you"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["pl.bialystok.vlo.VloMod"],
+    "client": ["pl.bialystok.vlo.client.VloClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
