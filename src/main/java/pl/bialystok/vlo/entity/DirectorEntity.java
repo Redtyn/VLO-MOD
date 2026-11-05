@@ -1,10 +1,7 @@
 package pl.bialystok.vlo.entity;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.pathing.MobNavigation;
-import net.minecraft.entity.ai.pathing.NavigationConditions;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -64,9 +61,7 @@ public class DirectorEntity extends PathAwareEntity {
         setPersistent();
         setCustomName(Text.literal("Пан Директор Мрочный"));
         setCustomNameVisible(true);
-        if (NavigationConditions.hasMobNavigation(this)) {
-            ((MobNavigation) getNavigation()).setCanPathThroughDoors(true);
-        }
+        DoorHelper.enableDoorPathing(this);
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -80,7 +75,6 @@ public class DirectorEntity extends PathAwareEntity {
     @Override
     protected void initGoals() {
         goalSelector.add(0, new SwimGoal(this));
-        goalSelector.add(1, new OpenDoorGoal(this, false)); // открытые двери = подсказка игроку
     }
 
     @Override public boolean canImmediatelyDespawn(double d) { return false; }
@@ -101,6 +95,7 @@ public class DirectorEntity extends PathAwareEntity {
             rage = s.stage >= 5 && s.stage < 6;
         }
 
+        if (age % 4 == 0) DoorHelper.openDoorsAhead(this); // открытые двери = подсказка игроку
         stepSounds(w);
         if (age % 40 == 0) proximityWarning(w);
 

@@ -2,8 +2,6 @@ package pl.bialystok.vlo.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.ai.pathing.MobNavigation;
-import net.minecraft.entity.ai.pathing.NavigationConditions;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -41,9 +39,7 @@ public class AdrikEntity extends PathAwareEntity {
         setPersistent();
         setCustomName(Text.literal("Адрик"));
         setCustomNameVisible(true);
-        if (NavigationConditions.hasMobNavigation(this)) {
-            ((MobNavigation) getNavigation()).setCanPathThroughDoors(true);
-        }
+        DoorHelper.enableDoorPathing(this);
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -56,7 +52,6 @@ public class AdrikEntity extends PathAwareEntity {
     @Override
     protected void initGoals() {
         goalSelector.add(0, new SwimGoal(this));
-        goalSelector.add(1, new OpenDoorGoal(this, true));
         goalSelector.add(2, new FollowPlayerGoal(this));
         goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 8f));
         goalSelector.add(4, new LookAroundGoal(this));
@@ -67,6 +62,7 @@ public class AdrikEntity extends PathAwareEntity {
         super.tick();
         if (getWorld().isClient) return;
 
+        if (age % 4 == 0) DoorHelper.openDoorsAhead(this);
         if (frozen > 0) {
             frozen--;
             getNavigation().stop();
